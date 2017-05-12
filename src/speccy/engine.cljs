@@ -13,6 +13,9 @@
 (defn looper [instrument-definition]
   (swap! loops conj instrument-definition))
 
+(defn clear-loops! []
+  (reset! loops []))
+
 (defn catch-background-tab [scheduler]
   (.addEventListener js/document "visibilitychange"
                      (fn [ev]

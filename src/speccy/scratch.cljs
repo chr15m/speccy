@@ -1,8 +1,10 @@
 (ns speccy.scratch
-  (:require [speccy.engine :refer [looper scheduler]]))
+  (:require [speccy.engine :refer [looper scheduler clear-loops!]]))
 
 ;(-> scheduler (.start player))
 ;(-> scheduler (.stop true))
+
+(clear-loops!)
 
 (looper (fn [t] {:p_env_decay 0.1
                  :p_env_sustain 0.1 ;([0.1 0.5] (mod (mod t 13) 2))
