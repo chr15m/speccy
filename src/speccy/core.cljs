@@ -1,16 +1,23 @@
 (ns speccy.core
   (:require [reagent.core :as reagent]
-            [speccy.engine :refer [looper scheduler player catch-background-tab]]
+            [speccy.engine :refer [looper scheduler player catch-background-tab loop-defaults]]
             [speccy.scratch]))
 
 (defn remove-defaults [m]
-  m)
+  (into {}
+        (remove nil?
+                (map
+                  (fn [k]
+                    (let [v (m k)]
+                      (if (and v (not= v (loop-defaults k))) 
+                        [k v])))
+                  (keys loop-defaults)))))
 
 (defn json-to-edn [v]
   (-> v
       (js/JSON.parse)
-      (remove-defaults)
       (js->clj :keywordize-keys true)
+      (remove-defaults)
       (str)
       (clojure.string/replace "," "\n")))
 
