@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
   max-width: 600px;
@@ -6,7 +10,6 @@ body {
   -webkit-font-smoothing: antialiased;
   font-size: 1.125em;
   color: #333;
-  line-height: 1.5em;
 }
 
 h1, h2, h3 {
@@ -35,4 +38,18 @@ a:hover {
 
 img {
   max-width: 100%;
+}
+
+textarea {
+  width: 48%;
+  float: left;
+  font-size: 0.75em;
+  padding: 0.5em;
+}
+
+pre {
+  font-size: 0.75em;
+  padding: 0.5em;
+  margin: 0.5em;
+  float: left;
 }
