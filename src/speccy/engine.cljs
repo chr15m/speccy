@@ -1,4 +1,6 @@
-(ns speccy.engine)
+(ns speccy.engine
+  (:require [cljs.core.async :refer [chan <! close!]])
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 ;; -------------------------
 ;; Audio engine
@@ -16,16 +18,33 @@
 (defn clear-loops! []
   (reset! loops []))
 
-(defn catch-background-tab [scheduler]
-  (.addEventListener js/document "visibilitychange"
-                     (fn [ev]
-                       (print (.-visibilityState js/document))
-                       (if (= (.-visibilityState js/document) "visible")
-                         (set! (.-aheadTime scheduler) 0.1)
-                         (do
-                           (set! (.-aheadTime scheduler) 2.0)
-                           (.process scheduler)))
-                       (print "aheadTime" (.-aheadTime scheduler)))))
+; uses a webworker to run ticks even on a backgrounded tab
+(let [metronome-worker-js "self.onmessage=function(e){setTimeout(function(){postMessage(e.data);},e.data.interval);};console.log('Metronome worker loaded.');"
+      worker-blob (js/Blob. (clj->js [metronome-worker-js]) {:type "application/javascript"})
+      worker (js/Worker. (.createObjectURL js/URL worker-blob))
+      call-id (atom 0)]
+
+  (defn make-worker-listener [id callback]
+    (fn [e]
+      (when (= e.data.id id)
+        (callback)
+        true)))
+
+  (defn schedule-tick [callback interval]
+    (let [id (swap! call-id inc)
+          listener-fn (make-worker-listener id callback)]
+      (.addEventListener worker
+                         "message"
+                         (fn [e]
+                           (when (listener-fn e) (.removeEventListener worker "message" listener-fn)))
+                         false)
+      (.postMessage worker (clj->js {:id id :interval interval}))))
+
+  ; this emulates async's timeout but in background worker thread
+  (defn timeout-worker [interval]
+    (let [c (chan)]
+      (schedule-tick (fn [] (close! c)) interval)
+      c)))
 
 (def loop-defaults {:wave_type 2
 
@@ -77,19 +96,13 @@
         (.generate)
         (.getAudio)))))
 
-(defn player [e]
-  (let [t (.-playbackTime e)
-        args (or (.-args e) {})
-        samples (or (args :samples) [])
-        tick (or (args :tick) 0)]
-    (print t tick (count samples))
+(go
+  (loop [samples [] tick 0]
+    (<! (timeout-worker (* 1000 period)))
+    (print tick (count samples))
     (doseq [s samples]
       (.play s))
-    (-> scheduler (.insert
-                    (+ t period)
-                    player
-                    {:samples
-                     (doall
-                       (remove nil? (map (partial evaluate-loop tick) @loops)))
-                     :tick (inc tick)}))))
-
+    (recur
+      (doall
+        (remove nil? (map (partial evaluate-loop tick) @loops)))
+      (inc tick))))

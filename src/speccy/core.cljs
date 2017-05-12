@@ -43,6 +43,4 @@
 
 (defn init! []
   (print "init")
-  (-> scheduler (.start player))
-  (catch-background-tab scheduler)
   (mount-root))
