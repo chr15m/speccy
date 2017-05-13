@@ -87,16 +87,23 @@
                     :sample_rate 44100
                     :oldParams true})
 
+(defn generate-sound [definition]
+  (-> definition
+    (clj->js)
+    (js/SoundEffect.)
+    (.generate)
+    (.getAudio)))
+
+(def generate-sound-mem (memoize generate-sound))
+
 (defn evaluate-instrument [t instrument-definition]
   (let [result (instrument-definition t)]
     (when result
-      (->
-        (merge instrument-defaults
-               result)
-        (clj->js)
-        (js/SoundEffect.)
-        (.generate)
-        (.getAudio)))))
+      (time
+        (->
+          (merge instrument-defaults
+                 result)
+          (generate-sound-mem))))))
 
 (defn play [player]
   (go
