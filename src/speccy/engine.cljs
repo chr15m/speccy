@@ -5,18 +5,20 @@
 ;; -------------------------
 ;; Audio engine
 
-(defonce actx (when (aget js/window "AudioContext") (js/window.AudioContext.)))
-(defonce scheduler (js/WebAudioScheduler. {:context actx}))
+(defn make-player [bpm]
+  (atom {:instruments []
+         :bpm bpm
+         :sub-ticks 2
+         :playing true}))
 
-(def period (/ 60 180))
+(defn bpm-to-period [bpm]
+  (/ 60000 180))
 
-(def loops (atom []))
+(defn add-instrument! [player instrument-definition]
+  (swap! player update-in [:instruments] conj instrument-definition))
 
-(defn looper [instrument-definition]
-  (swap! loops conj instrument-definition))
-
-(defn clear-loops! []
-  (reset! loops []))
+(defn clear! [player]
+  (swap! player assoc :instruments []))
 
 ; uses a webworker to run ticks even on a backgrounded tab
 (let [metronome-worker-js "self.onmessage=function(e){setTimeout(function(){postMessage(e.data);},e.data.interval);};console.log('Metronome worker loaded.');"
@@ -46,7 +48,7 @@
       (schedule-tick (fn [] (close! c)) interval)
       c)))
 
-(def loop-defaults {:wave_type 2
+(def instrument-defaults {:wave_type 2
 
                     :p_env_attack 0
                     :p_env_decay 0
@@ -85,24 +87,35 @@
                     :sample_rate 44100
                     :oldParams true})
 
-(defn evaluate-loop [t loop-definition]
-  (let [result (loop-definition t)]
+(defn evaluate-instrument [t instrument-definition]
+  (let [result (instrument-definition t)]
     (when result
       (->
-        (merge loop-defaults
+        (merge instrument-defaults
                result)
         (clj->js)
         (js/SoundEffect.)
         (.generate)
         (.getAudio)))))
 
-(go
-  (loop [samples [] tick 0]
-    (<! (timeout-worker (* 1000 period)))
-    (print tick (count samples))
-    (doseq [s samples]
-      (.play s))
-    (recur
-      (doall
-        (remove nil? (map (partial evaluate-loop tick) @loops)))
-      (inc tick))))
+(defn play [player]
+  (go
+    (let [actx (when (aget js/window "AudioContext") (js/window.AudioContext.))]
+      (print "play")
+      (loop [samples [] tick 0]
+        (<! (timeout-worker (* (bpm-to-period (* (@player :bpm) (@player :sub-ticks))))))
+        (print tick (count samples))
+        (doseq [s samples]
+          (.play s))
+        (if (@player :playing)
+          (recur
+            (doall
+              (remove nil? (map (partial evaluate-instrument tick) (@player :instruments))))
+            (inc tick))
+          (recur [] tick)))))
+  player)
+
+(defn singleton [bpm]
+  (let [player (make-player bpm)]
+    [(play player) (partial add-instrument! player) (partial clear! player)]))
+

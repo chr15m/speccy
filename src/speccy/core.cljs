@@ -1,6 +1,6 @@
 (ns speccy.core
   (:require [reagent.core :as reagent]
-            [speccy.engine :refer [looper scheduler player catch-background-tab loop-defaults]]
+            [speccy.engine :refer [instrument-defaults]]
             [speccy.scratch]))
 
 (defn remove-defaults [m]
@@ -9,9 +9,9 @@
                 (map
                   (fn [k]
                     (let [v (m k)]
-                      (if (and v (not= v (loop-defaults k))) 
+                      (if (and v (not= v (instrument-defaults k))) 
                         [k v])))
-                  (keys loop-defaults)))))
+                  (keys instrument-defaults)))))
 
 (defn json-to-edn [v]
   (-> v
