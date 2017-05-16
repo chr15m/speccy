@@ -3,6 +3,84 @@
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 ;; -------------------------
+;; Utility fns
+
+(defn float-to-frequency [f]
+  (+ (* f f 441 8) 0.001))
+
+(defn frequency-to-float [f]
+  (js/Math.sqrt (/ (- f 0.001) (* 8 441))))
+
+; taken from pure-data
+(defn mtof [m]
+  (cond
+    (<= m -1500) 0
+    (> m 1499) (mtof 1499)
+    :else (* (js/Math.exp (* m .0577622650)) 8.17579891564)))
+
+(defn midi-note-to-float [m]
+  [:p_base_freq (frequency-to-float (mtof m))])
+
+(defn wave-lookup [v]
+  [:wave_type (or ({:square 0 :saw 1 :sine 2 :noise 3 :sq 0 :sw 1 :sn 2 :ns 4} v) v)])
+
+(def key-table
+  {:wave wave-lookup
+   :w wave-lookup
+
+   :note midi-note-to-float
+   :n midi-note-to-float
+   :volume :sound_vol
+   :v :sound_vol
+
+   :env/attack :p_env_attack
+   :env/decay :p_env_decay
+   :env/sustain :p_env_sustain
+   :env/punch :p_env_punch
+
+   :e/a :p_env_attack
+   :e/d :p_env_decay
+   :e/s :p_env_sustain
+   :e/p :p_env_punch
+
+   :frequency :p_base_freq
+   :frequency/limit :p_freq_limit
+   :frequency/ramp :p_freq_ramp
+   :frequency/ramp-delta :p_freq_dramp
+
+   :lpf/frequency :p_lpf_freq
+   :lpf/resonance :p_lpf_resonance
+   :lpf/ramp :p_lpf_ramp
+
+   :hpf/frequency :p_hpf_freq
+   :hpf/ramp :p_hpf_ramp
+
+   :phase/offset :p_pha_offset
+   :phase/ramp :p_pha_ramp
+
+   :arp/speed :p_arp_speed
+   :arp/mod :p_arp_mod
+
+   :vibrato/strength :p_vib_strength
+   :vibrato/speed :p_vib_speed
+
+   :duty :p_duty
+   :duty/ramp :p_duty_ramp
+
+   :repeat :p_repeat_speed})
+
+(defn instrument-key-lookups [[k v]]
+  (let [lookup (key-table k)]
+    (if lookup
+      (if (fn? lookup)
+        (lookup v)
+        [lookup v])
+      [k v])))
+
+(defn filter-instrument-keys [instrument-result]
+  (into {} (map instrument-key-lookups instrument-result)))
+
+;; -------------------------
 ;; Audio engine
 
 (defn make-player [bpm]
@@ -121,7 +199,8 @@
     (when result
       (->
         (merge instrument-defaults
-               result)
+               (filter-instrument-keys result))
+        ;(printstrument)
         (generate-sound-mem)
         (make-source actx)))))
 
