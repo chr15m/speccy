@@ -5,8 +5,7 @@
 
 (defonce p (singleton 180))
 
-(let [[player add! clear!] p]
-  
+(let [[player add! clear! pause! play!] p]
   (clear!)
 
   (add! (fn [t]

@@ -23,6 +23,12 @@
 (defn clear! [player]
   (swap! player assoc :instruments []))
 
+(defn pause! [player]
+  (swap! player assoc :playing false))
+
+(defn play! [player]
+  (swap! player assoc :playing true))
+
 ; uses a webworker to run ticks even on a backgrounded tab
 (let [metronome-worker-js "self.onmessage=function(e){setTimeout(function(){postMessage(e.data);},e.data.interval);};console.log('Metronome worker loaded.');"
       worker-blob (js/Blob. (clj->js [metronome-worker-js]) {:type "application/javascript"})
@@ -163,5 +169,5 @@
 
 (defn singleton [bpm]
   (let [player (make-player bpm)]
-    [(play player) (partial add-instrument! player) (partial clear! player)]))
+    [(play player) (partial add-instrument! player) (partial clear! player) (partial pause! player) (partial play! player)]))
 
