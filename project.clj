@@ -4,12 +4,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.8.0" :scope "provided"]
-                 [org.clojure/clojurescript "1.9.495" :scope "provided"]
-                 [reagent "0.6.1"]]
+  :dependencies [[org.clojure/clojure "1.8.0"]
+                 [org.clojure/clojurescript "1.9.946"]
+                 [reagent "0.7.0"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
-            [lein-figwheel "0.5.9"]]
+            [lein-figwheel "0.5.14"]]
 
   :min-lein-version "2.5.0"
 
@@ -36,7 +36,7 @@
                          :optimizations :none
                          :pretty-print  true}
                         :figwheel
-                        {:open-urls ["http://localhost:3449/index.html"]}}
+                        {:on-jsload "speccy.core/mount-root"}}
                        :release
                        {:source-paths ["src" "env/prod/cljs"]
                         :compiler
@@ -46,8 +46,9 @@
                          :optimizations :advanced
                          :pretty-print false}}}}
 
-  :aliases {"release" ["do" "clean" ["cljsbuild" "once" "release"]]}
+  :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
 
-  :profiles {:dev {:dependencies [[figwheel-sidecar "0.5.9"]
-                                  [org.clojure/tools.nrepl "0.2.12"]
-                                  [com.cemerick/piggieback "0.2.2-SNAPSHOT"]]}})
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.7"]
+                                  [figwheel-sidecar "0.5.14"]
+                                  [org.clojure/tools.nrepl "0.2.13"]
+                                  [com.cemerick/piggieback "0.2.2"]]}})
