@@ -88,6 +88,12 @@
 (defn filter-instrument-keys [instrument-result]
   (into {} (map instrument-key-lookups instrument-result)))
 
+(defn default-from-b58 [instrument-result]
+  (let [d (instrument-result :default)]
+    (if d
+      (js->clj ((aget js/sfxr "b58decode") d) :keywordize-keys true)
+      {})))
+
 ;; -------------------------
 ;; Audio engine
 
@@ -207,6 +213,7 @@
     (when result
       (->
         (merge instrument-defaults
+               (default-from-b58 result)
                (filter-instrument-keys result))
         ;(printstrument)
         (generate-sound-mem)
