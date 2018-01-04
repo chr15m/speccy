@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.946"]
+                 [org.clojure/clojurescript "1.9.854"]
                  [reagent "0.7.0"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
@@ -34,6 +34,10 @@
                          :asset-path   "js/out"
                          :source-map true
                          :optimizations :none
+                         :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
+                                         :provides ["riffwave"]}
+                                        {:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/sfxr.js"
+                                         :provides ["sfxr"]}]
                          :pretty-print  true}
                         :figwheel
                         {:on-jsload "speccy.core/mount-root"}}
@@ -44,6 +48,10 @@
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
                          :optimizations :advanced
+                         :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
+                                         :provides ["riffwave"]}
+                                        {:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/sfxr.js"
+                                         :provides ["sfxr"]}]
                          :pretty-print false}}}}
 
   :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}

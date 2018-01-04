@@ -1,5 +1,7 @@
 (ns speccy.engine
-  (:require [cljs.core.async :refer [chan <! close!]])
+  (:require [cljs.core.async :refer [chan <! close!]]
+            sfxr
+            riffwave)
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 ;; -------------------------
