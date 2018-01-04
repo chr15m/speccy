@@ -18,8 +18,14 @@
     (> m 1499) (mtof 1499)
     :else (* (js/Math.exp (* m .0577622650)) 8.17579891564)))
 
-(defn midi-note-to-float [m]
-  [:p_base_freq (frequency-to-float (mtof m))])
+(defn midi-note-to-float-convert [n m]
+  [n (frequency-to-float (mtof m))])
+
+(defn frequency-to-float-convert [n f]
+  [n (frequency-to-float f)])
+
+(defn volume-float-or-int-convert [n f]
+  [n (if (> f 1) (/ f 127) f)])
 
 (defn wave-lookup [v]
   [:wave_type (or ({:square 0 :saw 1 :sine 2 :noise 3 :sq 0 :sw 1 :sn 2 :ns 4} v) v)])
@@ -28,10 +34,10 @@
   {:wave wave-lookup
    :w wave-lookup
 
-   :note midi-note-to-float
-   :n midi-note-to-float
-   :volume :sound_vol
-   :v :sound_vol
+   :note (partial midi-note-to-float-convert :p_base_freq)
+   :n (partial midi-note-to-float-convert :p_base_freq)
+   :volume (partial volume-float-or-int-convert :sound_vol)
+   :v (partial volume-float-or-int-convert :sound_vol)
 
    :env/attack :p_env_attack
    :env/decay :p_env_decay
@@ -43,16 +49,18 @@
    :e/s :p_env_sustain
    :e/p :p_env_punch
 
-   :frequency :p_base_freq
-   :frequency/limit :p_freq_limit
+   :frequency (partial frequency-to-float-convert :p_base_freq)
+   :frequency/limit (partial frequency-to-float-convert :p_freq_limit)
    :frequency/ramp :p_freq_ramp
    :frequency/ramp-delta :p_freq_dramp
 
-   :lpf/frequency :p_lpf_freq
+   :lpf/frequency (partial frequency-to-float-convert :p_lpf_freq)
+   :lpf/note (partial midi-note-to-float-convert :p_lpf_freq)
    :lpf/resonance :p_lpf_resonance
    :lpf/ramp :p_lpf_ramp
 
-   :hpf/frequency :p_hpf_freq
+   :hpf/frequency (partial frequency-to-float-convert :p_hpf_freq)
+   :hpf/note (partial midi-note-to-float-convert :p_hpf_freq)
    :hpf/ramp :p_hpf_ramp
 
    :phase/offset :p_pha_offset
@@ -67,7 +75,7 @@
    :duty :p_duty
    :duty/ramp :p_duty_ramp
 
-   :repeat :p_repeat_speed})
+   :retrigger :p_repeat_speed})
 
 (defn instrument-key-lookups [[k v]]
   (let [lookup (key-table k)]
