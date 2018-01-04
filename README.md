@@ -12,28 +12,67 @@ Here's an example synth:
 	; bloopy synth
 	(add! (fn [t]
 	  (if (= (mod t 2) 0)
-	    {:p_env_decay 0.393
-	     :p_env_sustain 0.698
-	     :p_lpf_ramp -0.8234398365020752
-	     :p_duty_ramp 0.001362761133350432
-	     :p_hpf_ramp 0.00417931517586112
-	     :p_freq_dramp 0.322
-	     :p_pha_offset -0.5764224529266357
-	     :p_arp_speed 0.776
-	     :p_arp_mod 0.746
-	     :p_freq_ramp 3.2808253536131815e-7
-	     :p_pha_ramp 0.01807297021150589
-	     :p_duty 0.09206738322973251
-	     :p_lpf_resonance 0.4376702308654785
-	     :p_repeat_speed 0.7718144655227661
-	     :p_env_attack 0.03691735118627548
-	     :p_lpf_freq 0.9774251580238342
-	     :wave_type (mod (mod (mod t 7) 21) 2)
-	     :p_vib_strength 0.0367879644036293
-	     :p_base_freq (* 1 ([0.102 0.204 0.153] (int (mod (/ (mod t 7) 2) 3))))
-	     :p_env_punch 0.499
-	     :p_hpf_freq 0.07438796013593674
-	     :p_vib_speed 0.1444406509399414})))
+	    {:wave :saw
+                   :env/decay 0.25
+                   :note (sequencer (sequencer t [0 1 2 3 4 5 6]) (get-scale t))
+                   :volume (sequencer t [0.1 0.1 0])
+                   :p_pha_offset (sequencer t [0.1 0.2 0.3 0.4 0.5])})))
 
  * Listen, modify, repeat.
 
+# Instrument parameters
+
+	:wave - oscillator waveform (:square :saw :sine :noise)
+
+	:volume - (0 -> 1)
+	
+	:note - oscillator pitch as (midi note number)
+	:frequency - oscillator pitch (Hz)
+	:frequency/limit - i do not know (Hz)
+	:frequency/ramp - freq change speed (-1 -> 1)
+	:frequency/ramp-delta - freq change acceleration (-1 -> 1)
+
+### Envelope
+
+	:env/attack - envelope attack time (0 -> 1)
+	:env/sustain - adsr envelope sustain time (0 -> 1)
+	:env/punch - adsr envelope sustain height (0 -> 1)
+	:env/decay - adsr envelope decay time (0 -> 1)
+
+### Low pass filter
+
+	:lpf/frequency - cutoff pitch (Hz)
+	:lpf/note - cutoff pitch (midi note)
+	:lpf/resonance - resonance (0 -> 1)
+	:lpf/ramp - pitch change rate (-1 -> 1)
+
+### High pass filter
+
+	:hpf/frequency - cutoff pitch (Hz)
+	:hpf/note - cutoff pitch (midi note)
+	:hpf/ramp - pitch change rate (-1 -> 1)
+
+### Oscillator phase
+
+	:phase/offset - (0 -> 1)
+	:phase/ramp - phase change rate (-1 -> 1)
+
+### Arpeggiator
+
+	:arp/speed - arpeggiation speed (0 -> 1)
+	:arp/mod - arpeggiation multiple (-1 -> 1)
+
+### Vibrato
+
+	:vibrato/depth - amount of vibrato (0 -> 1)
+	:vibrato/frequency - vibrato pitch (Hz)
+	:vibrato/note - vibrato pitch (midi note)
+
+### Oscillator duty cycle (square only)
+
+	:duty (0 -> 1)
+	:duty/ramp - duty change rate (-1 -> 1)
+
+### Repeat note
+
+	:retrigger - speed of retrigger (0 -> 1)
