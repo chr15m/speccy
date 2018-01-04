@@ -28,8 +28,8 @@
   (let [result (reagent/atom "")]
     (fn []
       [:div
-       [:img {:src "img/speccy.png"}]
-       [:textarea {:rows 36
+       [:p "Get a json synth definition from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]
+       [:textarea {:rows 5
                    :placeholder "paste json sfxr def here"
                    :on-change #(reset! result (json-to-edn (-> % .-target .-value)))}]
        [:pre @result]])))
