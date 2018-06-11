@@ -4,12 +4,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
-  :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.854"]
-                 [reagent "0.7.0"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.10.238"]
+                 [reagent "0.8.0"]]
 
   :plugins [[lein-cljsbuild "1.1.5"]
-            [lein-figwheel "0.5.14"]]
+            [lein-figwheel "0.5.16"]]
 
   :min-lein-version "2.5.0"
 
@@ -32,6 +32,10 @@
                          :output-to "public/js/app.js"
                          :output-dir "public/js/out"
                          :asset-path   "js/out"
+                         :install-deps true
+                         :npm-deps {"codemirror" "5.38.0"
+                                    "parinfer" "3.12.0"
+                                    "parinfer-codemirror" "1.4.2"}
                          :source-map true
                          :optimizations :none
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
@@ -44,9 +48,13 @@
                        :release
                        {:source-paths ["src" "env/prod/cljs"]
                         :compiler
-                        {:output-to "public/js/app.js"
+                        {:output-to "build/js/app.js"
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
+                         :install-deps true
+                         :npm-deps {"codemirror" "5.38.0"
+                                    "parinfer" "3.12.0"
+                                    "parinfer-codemirror" "1.4.2"}
                          :optimizations :advanced
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
                                          :provides ["riffwave"]}
@@ -56,7 +64,8 @@
 
   :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}
 
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.7"]
-                                  [figwheel-sidecar "0.5.14"]
+  :profiles {:dev {:source-paths ["src" "env/dev/clj"]
+                   :dependencies [[binaryage/devtools "0.9.7"]
+                                  [figwheel-sidecar "0.5.16"]
                                   [org.clojure/tools.nrepl "0.2.13"]
                                   [com.cemerick/piggieback "0.2.2"]]}})
