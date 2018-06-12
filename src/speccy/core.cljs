@@ -1,7 +1,14 @@
 (ns speccy.core
   (:require [reagent.core :as reagent]
+            [cljsjs.codemirror]
+            [cljsjs.codemirror.mode.clojure]
+            [cljsjs.codemirror.addon.edit.matchbrackets]
+            [cljsjs.codemirror.addon.edit.closebrackets]
+            [cljsjs.parinfer]
+            [cljsjs.parinfer-codemirror]
             [speccy.engine :refer [instrument-defaults]]
-            [speccy.scratch]))
+            ;[speccy.scratch]
+            ))
 
 (defn remove-defaults [m]
   (into {}
@@ -21,18 +28,30 @@
       (str)
       (clojure.string/replace "," "\n")))
 
+(defn component-codemirror []
+  (reagent/create-class
+    {:component-did-mount (fn [component]
+                            (let [cm (js/CodeMirror (reagent/dom-node component)
+                                                    (clj->js
+                                                      {:lineNumbers true
+                                                       :matchBrackets true
+                                                       :autofocus true
+                                                       :extraKeys {"Ctrl-S" (fn [] (js/alert "hello"))}
+                                                       ;:value @value-atom
+                                                       ;:theme "speccy"
+                                                       :autoCloseBrackets true
+                                                       :mode "clojure"}))]
+                              (js/parinferCodeMirror.init cm)))
+     :reagent-render (fn [] [:div#editor])}))
+
 ;; -------------------------
 ;; Views
 
 (defn home-page []
-  (let [result (reagent/atom "")]
-    (fn []
-      [:div
-       [:p "Get a json synth definition from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]
-       [:textarea {:rows 5
-                   :placeholder "paste json sfxr def here"
-                   :on-change #(reset! result (json-to-edn (-> % .-target .-value)))}]
-       [:pre @result]])))
+  (fn []
+    [:div
+     [:p#synthlink "Get synth defs from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]
+     [component-codemirror]]))
 
 ;; -------------------------
 ;; Initialize app

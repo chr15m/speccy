@@ -17,3 +17,5 @@ pom.xml.asc
 *.log
 /.env
 .*.swp
+package*.json
+node_modules
