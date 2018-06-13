@@ -6,9 +6,13 @@
             [cljsjs.codemirror.addon.edit.closebrackets]
             [cljsjs.parinfer]
             [cljsjs.parinfer-codemirror]
+            [cljs.tools.reader :refer [read-string]]
+            [cljs.js :refer [empty-state eval js-eval]]
             [speccy.engine :refer [instrument-defaults]]
             ;[speccy.scratch]
             ))
+
+(defonce editor-content (atom ""))
 
 (defn remove-defaults [m]
   (into {}
@@ -28,6 +32,22 @@
       (str)
       (clojure.string/replace "," "\n")))
 
+(defn beep [b]
+  (print "Beep:" b))
+
+(defn eval-str [s]
+  (eval ;(empty-state)
+        {'beep beep}
+        (read-string s)
+        {:eval js-eval
+         :source-map true
+         :context :expr}
+        (fn [result] result)))
+
+(defn send-it [cm]
+  (js/console.log (.getValue cm))
+  (eval-str (str "(do" (.getValue cm) ")")))
+
 (defn component-codemirror []
   (reagent/create-class
     {:component-did-mount (fn [component]
@@ -36,9 +56,10 @@
                                                       {:lineNumbers true
                                                        :matchBrackets true
                                                        :autofocus true
-                                                       :extraKeys {"Ctrl-S" (fn [] (js/alert "hello"))}
+                                                       :extraKeys {"Ctrl-S" send-it
+                                                                   "Enter" false}
                                                        ;:value @value-atom
-                                                       ;:theme "speccy"
+                                                       :theme "erlang-dark"
                                                        :autoCloseBrackets true
                                                        :mode "clojure"}))]
                               (js/parinferCodeMirror.init cm)))
@@ -50,8 +71,8 @@
 (defn home-page []
   (fn []
     [:div
-     [:p#synthlink "Get synth defs from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]
-     [component-codemirror]]))
+     [component-codemirror]
+     [:p#synthlink "Get synth defs from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]]))
 
 ;; -------------------------
 ;; Initialize app

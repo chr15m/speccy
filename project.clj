@@ -37,7 +37,7 @@
                          :asset-path   "js/out"
                          :source-map true
                          :optimizations :none
-                         :install-deps true
+                         :install-deps false
                          :npm-deps {"codemirror" "5.38.0"}
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
                                          :provides ["riffwave"]}
@@ -53,7 +53,7 @@
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
                          :optimizations :advanced
-                         :install-deps true
+                         :install-deps false
                          :npm-deps {"codemirror" "5.38.0"}
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
                                          :provides ["riffwave"]}

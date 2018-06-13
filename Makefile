@@ -1,10 +1,7 @@
-deps: public/lib/sfxr.js public/lib/riffwave.js
+all: public/fonts/fonts.css
 
-public/lib/sfxr.js:
-	curl https://raw.githubusercontent.com/chr15m/jsfxr/master/sfxr.js > $@
+node_modules/.bin/goofoffline:
+	npm install google-fonts-offline
 
-public/lib/riffwave.js:
-	curl https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js > $@
-
-# public/lib/web-audio-scheduler.min.js:
-
+public/fonts/fonts.css: node_modules/.bin/goofoffline
+	cd public && ../$< "http://fonts.googleapis.com/css?family=Cutive+Mono"
