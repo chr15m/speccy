@@ -34,12 +34,13 @@
 
 (def key-table
   {:wave wave-lookup
-   :w wave-lookup
+   :w :wave
 
    :note (partial midi-note-to-float-convert :p_base_freq)
-   :n (partial midi-note-to-float-convert :p_base_freq)
+   :n :note
    :volume (partial volume-float-or-int-convert :sound_vol)
-   :v (partial volume-float-or-int-convert :sound_vol)
+   :vol :volume
+   :v :volume
 
    :env/attack :p_env_attack
    :env/decay :p_env_decay
@@ -52,7 +53,7 @@
    :e/p :p_env_punch
 
    :frequency (partial frequency-to-float-convert :p_base_freq)
-   :frequency/limit (partial frequency-to-float-convert :p_freq_limit)
+   :frequency/limit :frequency
    :frequency/ramp :p_freq_ramp
    :frequency/ramp-delta :p_freq_dramp
 
@@ -77,14 +78,18 @@
    :duty :p_duty
    :duty/ramp :p_duty_ramp
 
-   :retrigger :p_repeat_speed})
+   :retrigger :p_repeat_speed
+   :retrig :p_repeat_speed
+   :rt :p_repeat_speed})
 
 (defn instrument-key-lookups [[k v]]
   (let [lookup (key-table k)]
     (if lookup
       (if (fn? lookup)
         (lookup v)
-        [lookup v])
+        (if (key-table lookup)
+          (instrument-key-lookups [lookup v])
+          [lookup v]))
       [k v])))
 
 (defn filter-instrument-keys [instrument-result]
