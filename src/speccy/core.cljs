@@ -30,18 +30,18 @@
       (str)
       (clojure.string/replace "," "\n")))
 
-(defn eval-str [s]
+(defn eval-str [cm-code]
   (let [compiler-state (empty-state)]
     (eval compiler-state
           '(do
-             (require '[speccy.engine :refer [singleton sequencer make-player play clear! add-instrument!]])
+             (require '[speccy.engine :refer [singleton sequencer make-player play clear! add-instrument!] :as sp])
              (defonce player (play (make-player 180)))
              (clear! player))
           {:eval js-eval
            :context :expr}
           (partial print "player-state"))
     (eval compiler-state
-          (read-string s)
+          (read-string (str "(do\n" cm-code "\n)"))
           {:eval js-eval
            :source-map true
            :context :expr}
