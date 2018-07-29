@@ -48,6 +48,7 @@
 
 (defn send-it [cm]
   (let [content (.getValue cm)]
+    (reset! editor-content content)
     (try
       (eval-str (str "(do" content ")"))
       (catch :default e (js/alert e)))))
@@ -62,6 +63,7 @@
                                                       {:lineNumbers true
                                                        :matchBrackets true
                                                        :autofocus true
+                                                       :value @editor-content
                                                        :theme "erlang-dark"
                                                        :autoCloseBrackets true
                                                        :mode "clojure"}))]
