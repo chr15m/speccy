@@ -48,6 +48,8 @@
   (js/console.log (.getValue cm))
   (eval-str (str "(do" (.getValue cm) ")")))
 
+(aset (.-commands js/CodeMirror) "save" send-it)
+
 (defn component-codemirror []
   (reagent/create-class
     {:component-did-mount (fn [component]
@@ -56,9 +58,6 @@
                                                       {:lineNumbers true
                                                        :matchBrackets true
                                                        :autofocus true
-                                                       :extraKeys {"Ctrl-S" send-it
-                                                                   "Enter" false}
-                                                       ;:value @value-atom
                                                        :theme "erlang-dark"
                                                        :autoCloseBrackets true
                                                        :mode "clojure"}))]
