@@ -8,9 +8,7 @@
             [cljsjs.parinfer-codemirror]
             [cljs.tools.reader :refer [read-string]]
             [cljs.js :refer [empty-state eval js-eval]]
-            [speccy.engine :refer [instrument-defaults]]
-            ;[speccy.scratch]
-            ))
+            [speccy.engine :refer [instrument-defaults]]))
 
 (defonce editor-content (atom ""))
 
@@ -35,10 +33,13 @@
 (defn eval-str [s]
   (let [compiler-state (empty-state)]
     (eval compiler-state
-          '(require '[speccy.engine :refer [singleton sequencer]])
+          '(do
+             (require '[speccy.engine :refer [singleton sequencer make-player play clear! add-instrument!]])
+             (defonce player (play (make-player 180)))
+             (clear! player))
           {:eval js-eval
            :context :expr}
-          js/console.log)
+          (partial print "player-state"))
     (eval compiler-state
           (read-string s)
           {:eval js-eval
@@ -50,7 +51,7 @@
   (let [content (.getValue cm)]
     (reset! editor-content content)
     (try
-      (eval-str (str "(do" content ")"))
+      (eval-str content)
       (catch :default e (js/alert e)))))
 
 (aset (.-commands js/CodeMirror) "save" send-it)
