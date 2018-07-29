@@ -32,21 +32,25 @@
       (str)
       (clojure.string/replace "," "\n")))
 
-(defn beep [b]
-  (print "Beep:" b))
-
 (defn eval-str [s]
-  (eval ;(empty-state)
-        {'beep beep}
-        (read-string s)
-        {:eval js-eval
-         :source-map true
-         :context :expr}
-        (fn [result] result)))
+  (let [compiler-state (empty-state)]
+    (eval compiler-state
+          '(require '[speccy.engine :refer [singleton sequencer]])
+          {:eval js-eval
+           :context :expr}
+          js/console.log)
+    (eval compiler-state
+          (read-string s)
+          {:eval js-eval
+           :source-map true
+           :context :expr}
+          (fn [result] result))))
 
 (defn send-it [cm]
-  (js/console.log (.getValue cm))
-  (eval-str (str "(do" (.getValue cm) ")")))
+  (let [content (.getValue cm)]
+    (try
+      (eval-str (str "(do" content ")"))
+      (catch :default e (js/alert e)))))
 
 (aset (.-commands js/CodeMirror) "save" send-it)
 
