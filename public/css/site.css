@@ -7,6 +7,16 @@
   min-height: 100%;
 }
 
+#spinner {
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -32px;
+  margin-left: -32px;
+}
+
 * {
   box-sizing: border-box;
 }
