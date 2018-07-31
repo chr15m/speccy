@@ -31,21 +31,27 @@
       (clojure.string/replace "," "\n")))
 
 (defn eval-str [cm-code]
-  (let [compiler-state (empty-state)]
+  (let [compiler-state (empty-state)
+        parsed-code (read-string (str "(do\n" cm-code "\n)"))]
+    (print "Code to be run:")
+    (print parsed-code)
     (eval compiler-state
           '(do
-             (require '[speccy.engine :refer [singleton sequencer make-player play clear! add-instrument!] :as sp])
+             (require '[speccy.engine :refer [singleton make-player play clear! add-instrument! at sq] :as sp])
              (defonce player (play (make-player 180)))
+             (def sfxr (partial add-instrument! player))
              (clear! player))
           {:eval js-eval
            :context :expr}
           (partial print "player-state"))
-    (eval compiler-state
-          (read-string (str "(do\n" cm-code "\n)"))
-          {:eval js-eval
-           :source-map true
-           :context :expr}
-          (fn [result] result))))
+    (try
+      (eval compiler-state
+            parsed-code
+            {:eval js-eval
+             :source-map true
+             :context :expr}
+            (fn [result] result))
+      (catch :default e (js/alert e)))))
 
 (defn send-it [cm]
   (let [content (.getValue cm)]
