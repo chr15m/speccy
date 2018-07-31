@@ -21,13 +21,13 @@
     :else (* (js/Math.exp (* m .0577622650)) 8.17579891564)))
 
 (defn midi-note-to-float-convert [n m]
-  [n (if (> m 0) (frequency-to-float (mtof m)) m)])
+  [n (when (> m 0) (frequency-to-float (mtof m)))])
 
 (defn frequency-to-float-convert [n f]
-  [n (if (> f 0) (frequency-to-float f) f)])
+  [n (when (> f 0) (frequency-to-float f))])
 
 (defn volume-float-or-int-convert [n f]
-  [n (if (> f 0) (if (> f 1) (/ f 127) f) 0)])
+  [n (when (> f 0) (if (> f 1) (/ f 127) f))])
 
 (defn wave-lookup [v]
   [:wave_type (or ({:square 0 :saw 1 :sine 2 :noise 3 :sq 0 :sw 1 :sn 2 :ns 4} v) v)])
@@ -96,14 +96,14 @@
 
 (defn filter-instrument-keys [instrument-result t]
   (let [instrument-processed-tuples (map (fn [kv] (let [[kd vd] (instrument-key-lookups t kv)]
-                                                    (if (not= vd (instrument-result kd))
+                                                    (if (or (not= vd (instrument-result kd)) (nil? vd))
                                                       [kd vd]
                                                       nil)))
                                          instrument-result)
         instrument-filtered-tuples (remove nil? instrument-processed-tuples)
         instrument-filtered (into {} instrument-filtered-tuples)
         instrument-updated (merge instrument-result instrument-filtered)]
-    ;(print instrument-processed)
+    ;(print instrument-processed-tuples)
     ;(print instrument-filtered)
     ;(print (instrument-result :p_base_freq))
     ;(print (instrument-updated :p_base_freq))
