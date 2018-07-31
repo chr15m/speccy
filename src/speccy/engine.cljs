@@ -275,5 +275,16 @@
   (let [player (make-player bpm)]
     [(play player) (partial add-instrument! player) (partial clear! player) (partial pause! player) (partial play! player)]))
 
-(defn sequencer [t s]
+;; -------------------------
+;; User helper fns
+
+(defn sq [t s]
   (get s (mod t (count s))))
+
+(defn at [t l s]
+  (get s (mod t l)))
+
+(defn prt [& args]
+  (apply print args)
+  (last args))
+
