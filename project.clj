@@ -52,7 +52,7 @@
                         {:output-to "build/js/app.js"
                          :output-dir "public/js/release"
                          :asset-path   "js/out"
-                         :optimizations :advanced
+                         :optimizations :simple
                          :install-deps false
                          :npm-deps {"codemirror" "5.38.0"}
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"

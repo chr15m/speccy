@@ -37,6 +37,7 @@
     (print parsed-code)
     (eval compiler-state
           '(do
+             (ns cljs.user)
              (require '[speccy.engine :refer [singleton make-player play clear! add-instrument! at sq] :as sp])
              (defonce player (play (make-player 180)))
              (def sfxr (partial add-instrument! player))
