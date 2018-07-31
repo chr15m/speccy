@@ -317,6 +317,11 @@
 (defn at [t l s]
   (get s (mod t l)))
 
+(defn zz [f]
+  (fn [& args]
+    (when (not (some #(= nil %) args))
+      (apply f args))))
+
 (defn prt [& args]
   (apply print args)
   (last args))
