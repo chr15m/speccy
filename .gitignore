@@ -9,9 +9,10 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /resources/public/js
-/public/js/out
+/public/js
 /public/lib/*.js
-/public/js/app.js
+public/fonts/
+build
 /out
 /.repl
 *.log
@@ -19,4 +20,3 @@ pom.xml.asc
 .*.swp
 package*.json
 node_modules
-public/fonts/
