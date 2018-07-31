@@ -56,6 +56,7 @@
 (defn send-it [cm]
   (let [content (.getValue cm)]
     (reset! editor-content content)
+    (.setItem js/localStorage "speccy-editor" content)
     (try
       (eval-str content)
       (catch :default e (js/alert e)))))
@@ -95,4 +96,5 @@
 
 (defn init! []
   (print "init")
+  (reset! editor-content (or (.getItem js/localStorage "speccy-editor") ""))
   (mount-root))
