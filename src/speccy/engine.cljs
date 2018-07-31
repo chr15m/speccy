@@ -82,18 +82,18 @@
    :retrig :p_repeat_speed
    :rt :p_repeat_speed})
 
-(defn instrument-key-lookups [[k v]]
-  (let [lookup (key-table k)]
-    (if lookup
-      (if (fn? lookup)
-        (lookup v)
-        (if (key-table lookup)
-          (instrument-key-lookups [lookup v])
-          [lookup v]))
-      [k v])))
+(defn instrument-key-lookups [t [k v]]
+  (if (fn? v)
+    (instrument-key-lookups t [k (v t)])
+    (let [lookup (key-table k)]
+      (if lookup
+        (if (fn? lookup)
+          (lookup v)
+          (if (key-table lookup)
+            (instrument-key-lookups t [lookup v])
+            [lookup v]))
+        [k v]))))
 
-(defn filter-instrument-keys [instrument-result]
-  (into {} (map instrument-key-lookups instrument-result)))
 
 (defn from-b58 [s]
   (if s
