@@ -1,0 +1,108 @@
+@import url(../fonts/fonts.css);
+@import url(erlang-dark.css);
+
+.CodeMirror {
+  background-color: #222 !important;
+  width: 100%;
+  min-height: 100%;
+}
+
+#spinner {
+  width: 64px;
+  height: 64px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -32px;
+  margin-left: -32px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  min-height: 100%;
+}
+
+body {
+  margin: 0px;
+  font-family: "Cutive Mono", monospace;
+  color: #ccc;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+  font-size: 1.125em;
+  background-color: #222;
+  height: 100%;
+  min-height: 100%;
+}
+
+h1, h2, h3 {
+}
+
+h1 {
+  font-size: 2.5em
+}
+
+h2 {
+  font-size: 2em
+}
+
+h3 {
+  font-size: 1.5em
+}
+
+a {
+  color: #eee;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+}
+
+textarea {
+  width: 100%;
+  font-size: 0.75em;
+  padding: 0.5em;
+  display: inline-block;
+}
+
+pre {
+  vertical-align: text-top;
+  font-size: 0.75em;
+  padding: 0.5em;
+  margin: 0.5em;
+  width: 20%;
+  display: inline-block;
+}
+
+#app {
+  height: 100%;
+  min-height: 100%;
+}
+
+#app > div {
+  height: 100%;
+  min-height: 100%;
+}
+
+#synthlink {
+  position: absolute;
+  right: 1.25em;
+  top: 0.25em;
+  padding: 0px;
+  margin: 0px;
+}
+
+#editor {
+  height: 100%;
+  min-height: 100%;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
