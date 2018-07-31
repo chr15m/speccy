@@ -10,6 +10,22 @@
             [cljs.js :refer [empty-state eval js-eval]]
             [speccy.engine :refer [instrument-defaults]]))
 
+; TODO:
+; * note shortcuts like :C#4 and :A-2 (need octaves in there)
+; * fix error handling - show user errors when ctrl-S is hit
+; * fix missing fonts
+; * note pairs (wave-lookup/key-table can probably pass back multiple key vals - test it)
+;   or just accept [60 127] pairs at inst level?
+; * key combo to insert 0x00
+; * key combo to insert --- (notes)
+;
+; * UI to mute channels quickly (at the webaudio graph layer)
+; * in-codemirror feedback to show position in sq/at being currently processed
+; * multiplayer webrtc lol
+;
+; * macro for invoking instruments with player & time inserted
+; * macros to fold up adding with less chars
+
 (defonce editor-content (atom ""))
 
 (defn remove-defaults [m]
