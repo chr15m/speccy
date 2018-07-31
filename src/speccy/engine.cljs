@@ -94,6 +94,20 @@
             [lookup v]))
         [k v]))))
 
+(defn filter-instrument-keys [instrument-result t]
+  (let [instrument-processed-tuples (map (fn [kv] (let [[kd vd] (instrument-key-lookups t kv)]
+                                                    (if (not= vd (instrument-result kd))
+                                                      [kd vd]
+                                                      nil)))
+                                         instrument-result)
+        instrument-filtered-tuples (remove nil? instrument-processed-tuples)
+        instrument-filtered (into {} instrument-filtered-tuples)
+        instrument-updated (merge instrument-result instrument-filtered)]
+    ;(print instrument-processed)
+    ;(print instrument-filtered)
+    ;(print (instrument-result :p_base_freq))
+    ;(print (instrument-updated :p_base_freq))
+    instrument-updated))
 
 (defn from-b58 [s]
   (if s
@@ -119,7 +133,7 @@
 (defn bpm-timeout [player]
   (* (bpm-to-period (* (player :bpm) (player :sub-ticks)))))
 
-(defn add-instrument! [player instrument-definition]
+(defn add-instrument! [player & instrument-definition]
   (swap! player update-in [:instruments] conj instrument-definition))
 
 (defn clear! [player]
@@ -218,13 +232,32 @@
 
 (def generate-sound-mem (memoize generate-sound))
 
+(defn process-single-instrument [i t]
+  ;(print "process-single-instrument" i)
+  (cond
+    (fn? i) (i t)
+    (string? i) (from-b58 i)
+    (map? i) i
+    ; TODO: feedback for the user here
+    :else {}))
+
+(defn printstrument [p]
+  (print "prinstrument:" p)
+  p)
+
 (defn evaluate-instrument [actx t instrument-definition]
-  (let [result (instrument-definition t)]
-    (when result
+  ;(print "instrument-definition" instrument-definition)
+  (let [instrument-results (map #(process-single-instrument % t) instrument-definition)
+        ;_ (print "instrument-results:" instrument-results)
+        result (apply merge instrument-results)
+        result (when result (merge instrument-defaults
+                                   (default-from-b58 result)
+                                   (filter-instrument-keys result t)))
+        exists (and result (> (result :sound_vol) 0) (> (result :p_base_freq) 0))]
+    ;(print result)
+    (when exists
       (->
-        (merge instrument-defaults
-               (default-from-b58 result)
-               (filter-instrument-keys result))
+        result
         ;(printstrument)
         (generate-sound-mem)
         (make-source actx)))))
