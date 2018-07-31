@@ -21,13 +21,13 @@
     :else (* (js/Math.exp (* m .0577622650)) 8.17579891564)))
 
 (defn midi-note-to-float-convert [n m]
-  [n (frequency-to-float (mtof m))])
+  [n (if (> m 0) (frequency-to-float (mtof m)) m)])
 
 (defn frequency-to-float-convert [n f]
-  [n (frequency-to-float f)])
+  [n (if (> f 0) (frequency-to-float f) f)])
 
 (defn volume-float-or-int-convert [n f]
-  [n (if (> f 1) (/ f 127) f)])
+  [n (if (> f 0) (if (> f 1) (/ f 127) f) 0)])
 
 (defn wave-lookup [v]
   [:wave_type (or ({:square 0 :saw 1 :sine 2 :noise 3 :sq 0 :sw 1 :sn 2 :ns 4} v) v)])
