@@ -1,24 +1,46 @@
 eight-bit algorave livecoding
 
-![zx-spectrum close-up](./public/img/speccy.png)
+![zx-spectrum close-up](./public/img/bg.png)
+
+# Quick start
+
+Example to paste into the editor:
+
+	(sfxr "1111128F2i1nMgXwxZ1HMniZX45ZzoZaM9WBtcQMiZDBbD7rvq6mBCATySSmW7xJabfyy9xfh2aeeB1JPr4b7vKfXcZDbWJ7aMPbg45gBKUxMijaTNnvb2pw"
+	      {:duty #(/ (mod % 256) 256)
+	       :note #(at % 16 {0 24
+	                        3 24
+	                        4 60
+	                        5 48
+	                        6 24
+	                        8 24})})
+
+To make your own synths:
 
  * Generate a sound you like at [sfxr.me](http://sfxr.me/).
- * Click "Serialize" and copy the JSON definition.
- * Paste into the app's text-box to generate EDN.
- * Add to [scratch.cljs](./src/speccy/scratch.cljs) and edit to add time dependent changes.
-
-Here's an example synth:
-
-	; bloopy synth
-	(add! (fn [t]
-	  (if (= (mod t 2) 0)
-	    {:wave :saw
-                   :env/decay 0.25
-                   :note (sequencer (sequencer t [0 1 2 3 4 5 6]) (get-scale t))
-                   :volume (sequencer t [0.1 0.1 0])
-                   :p_pha_offset (sequencer t [0.1 0.2 0.3 0.4 0.5])})))
-
+ * Click the "Copy" button to get the synth definition.
+ * Paste this code into the editor: `(sfxr "...")` replacing the ellipsis with your copied definition.
+ * Hit `ctrl-S` to send your instrument to the synthesizer.
  * Listen, modify, repeat.
+
+# Helper functions
+
+ * `sq` is a basic sequencer. Args: `position` (e.g. time), `list`. Looks up the value wrapped by the array length.
+
+For example:
+
+	#(sq % [1 1 0 0])
+
+Will yeild: `1 1 0 0 1 1 0 0 1 1 0 0 ...`.
+
+ * `at` is another basic sequencer. Args: `position` (e.g. time), `wrap-length` when to loop (e.g. sequence length), `values` is a hash-map of note-positions yeilding what should happen at that point in time.
+
+for example:
+
+	#(at % 8 {2 60
+	          7 55})
+
+will yeild: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...`. 
 
 # Instrument parameters
 
