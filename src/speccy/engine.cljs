@@ -95,11 +95,14 @@
 (defn filter-instrument-keys [instrument-result]
   (into {} (map instrument-key-lookups instrument-result)))
 
+(defn from-b58 [s]
+  (if s
+    (js->clj ((aget js/sfxr "b58decode") s) :keywordize-keys true)
+    {}))
+
 (defn default-from-b58 [instrument-result]
   (let [d (instrument-result :default)]
-    (if d
-      (js->clj ((aget js/sfxr "b58decode") d) :keywordize-keys true)
-      {})))
+    (from-b58 d)))
 
 ;; -------------------------
 ;; Audio engine
