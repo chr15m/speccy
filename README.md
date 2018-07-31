@@ -1,6 +1,6 @@
 eight-bit algorave livecoding
 
-![zx-spectrum close-up](./public/img/bg.png)
+![zx-spectrum close-up](./public/img/speccy.png)
 
 # Quick start
 
