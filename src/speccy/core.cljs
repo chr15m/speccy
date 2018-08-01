@@ -11,6 +11,7 @@
             [speccy.engine :refer [instrument-defaults]]))
 
 ; TODO:
+; 
 ; * note shortcuts like :C#4 and :A-2 (need octaves in there)
 ; * fix error handling - show user errors when ctrl-S is hit
 ; * fix missing fonts
@@ -18,6 +19,8 @@
 ;   or just accept [60 127] pairs at inst level?
 ; * key combo to insert 0x00
 ; * key combo to insert --- (notes)
+; * piano note insert functionality (alt-KEY to insert piano note)
+; * mobile friendly UI
 ;
 ; * UI to mute channels quickly (at the webaudio graph layer)
 ; * in-codemirror feedback to show position in sq/at being currently processed
