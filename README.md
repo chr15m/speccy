@@ -2,6 +2,8 @@ eight-bit algorave livecoding
 
 ![zx-spectrum close-up](./public/img/speccy.png)
 
+[Watch the demo video](https://youtu.be/IZtCSfd9G_A).
+
 # Quick start
 
 Example to paste into the editor:
