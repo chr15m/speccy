@@ -91,12 +91,16 @@ pre {
   min-height: 100%;
 }
 
-#synthlink {
+#info {
   position: absolute;
   right: 1.25em;
   top: 0.25em;
   padding: 0px;
   margin: 0px;
+}
+
+#info p {
+  margin: 0.25em;
 }
 
 #editor {

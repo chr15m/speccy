@@ -105,7 +105,10 @@
   (fn []
     [:div
      [component-codemirror]
-     [:p#synthlink "Get synth defs from " [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"]]]))
+     [:div#info
+      [:p "ctrl-S to run"]
+      [:p [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"] " (sounds)"]
+      [:p [:a {:href "https://github.com/chr15m/speccy/#quick-start"} "documentation"]]]]))
 
 ;; -------------------------
 ;; Initialize app
