@@ -42,7 +42,9 @@
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
                                          :provides ["riffwave"]}
                                         {:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/sfxr.js"
-                                         :provides ["sfxr"]}]
+                                         :provides ["sfxr"]}
+                                        {:file "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"
+                                         :provides ["seedrandom"]}]
                          :pretty-print  true}
                         :figwheel
                         {:on-jsload "speccy.core/mount-root"}}
@@ -58,7 +60,9 @@
                          :foreign-libs [{:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/riffwave.js"
                                          :provides ["riffwave"]}
                                         {:file "https://raw.githubusercontent.com/chr15m/jsfxr/master/sfxr.js"
-                                         :provides ["sfxr"]}]
+                                         :provides ["sfxr"]}
+                                        {:file "https://cdnjs.cloudflare.com/ajax/libs/seedrandom/2.4.3/seedrandom.min.js"
+                                         :provides ["seedrandom"]}]
                          :pretty-print false}}}}
 
   :aliases {"package" ["do" "clean" ["cljsbuild" "once" "release"]]}

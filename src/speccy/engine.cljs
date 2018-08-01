@@ -1,7 +1,8 @@
 (ns speccy.engine
   (:require [cljs.core.async :refer [chan <! close!]]
             sfxr
-            riffwave)
+            riffwave
+            seedrandom)
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 ;; -------------------------
@@ -321,6 +322,9 @@
   (fn [& args]
     (when (not (some #(= nil %) args))
       (apply f args))))
+
+(defn seed [x]
+  (js/Math.seedrandom x))
 
 (defn prt [& args]
   (apply print args)
