@@ -326,6 +326,12 @@
 (defn seed [x]
   (js/Math.seedrandom x))
 
+(defn rnd [x]
+  (let [r (js/Math.random)]
+    (cond (vector? x) (nth x (* r (count x)))
+          (number? x) (* x r)
+          :else r)))
+
 (defn prt [& args]
   (apply print args)
   (last args))
