@@ -6,7 +6,11 @@ eight-bit algorave livecoding
 
 # Quick start
 
-Example to paste into the editor:
+Minimal example to paste into the editor:
+
+(sfxr {:wave :square :note #(at % 16 {0 60 8 65})})
+
+More complex example:
 
 	(sfxr "1111128F2i1nMgXwxZ1HMniZX45ZzoZaM9WBtcQMiZDBbD7rvq6mBCATySSmW7xJabfyy9xfh2aeeB1JPr4b7vKfXcZDbWJ7aMPbg45gBKUxMijaTNnvb2pw"
 	      {:duty #(/ (mod % 256) 256)
