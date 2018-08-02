@@ -33,16 +33,16 @@ For example:
 
 	#(sq % [1 1 0 0])
 
-Will yeild: `1 1 0 0 1 1 0 0 1 1 0 0 ...`.
+Will yield: `1 1 0 0 1 1 0 0 1 1 0 0 ...`.
 
- * `at` is another basic sequencer. Args: `position` (e.g. time), `wrap-length` when to loop (e.g. sequence length), `values` is a hash-map of note-positions yeilding what should happen at that point in time.
+ * `at` is another basic sequencer. Args: `position` (e.g. time), `wrap-length` when to loop (e.g. sequence length), `values` is a hash-map of note-positions yielding what should happen at that point in time.
 
 for example:
 
 	#(at % 8 {2 60
 	          7 55})
 
-will yeild: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...`. 
+will yield: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...`. 
 
 # Instrument parameters
 
