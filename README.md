@@ -8,7 +8,7 @@ eight-bit algorave livecoding
 
 Minimal example to paste into the editor:
 
-(sfxr {:wave :square :note #(at % 16 {0 60 8 65})})
+`(sfxr {:wave :square :note #(at % 16 {0 60 8 65})})`
 
 More complex example:
 
