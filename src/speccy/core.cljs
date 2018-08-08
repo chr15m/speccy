@@ -33,6 +33,9 @@
 
 (defonce editor-content (atom ""))
 
+(def is-mac?
+  (>= (.indexOf (aget js/navigator "userAgent") "Macintosh") 0))
+
 (defn remove-defaults [m]
   (into {}
         (remove nil?
@@ -108,7 +111,7 @@
     [:div
      [component-codemirror]
      [:div#info
-      [:p "ctrl-S to run"]
+      [:p (if is-mac? "cmd" "ctrl") "-S to run"]
       [:p [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"] " (sounds)"]
       [:p [:a {:href "https://github.com/chr15m/speccy/#quick-start"} "documentation"]]]]))
 
