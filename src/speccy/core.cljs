@@ -12,12 +12,18 @@
 
 ; TODO:
 ;
+; * button to run send-it instead of ctrl/cmd-S
 ; * key combo to insert 0x00
-; * mobile friendly UI
-;
 ; * note shortcuts like :C#4 and :A-2 (need octaves in there)
 ; * better error handling - figwheel like popup
 ; * fix error handling - catch runtime errors inside fns
+;
+; * export X bars to JSON
+; * script to render JSON export to:
+;   * individual wavs + text file containing timing sequence
+;   * impulse tracker file
+; * integrate MIDI->atom for using MIDI param inside instruments
+;
 ; * fix missing fonts
 ; * note pairs (wave-lookup/key-table can probably pass back multiple key vals - test it)
 ;   or just accept [60 127] pairs at inst level?
