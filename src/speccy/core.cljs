@@ -38,6 +38,7 @@
 ; * macros to fold up adding with less chars
 
 (defonce editor-content (atom ""))
+(defonce cm-instance (atom nil))
 
 (def is-mac?
   (>= (.indexOf (aget js/navigator "userAgent") "Macintosh") 0))
@@ -106,7 +107,8 @@
                                                        :theme "erlang-dark"
                                                        :autoCloseBrackets true
                                                        :mode "clojure"}))]
-                              (js/parinferCodeMirror.init cm)))
+                              (js/parinferCodeMirror.init cm)
+                              (reset! cm-instance cm)))
      :reagent-render (fn [] [:div#editor])}))
 
 ;; -------------------------
@@ -119,7 +121,8 @@
      [:div#info
       [:p (if is-mac? "cmd" "ctrl") "-S to run"]
       [:p [:a {:href "http://sfxr.me/" :target "_new"} "sfxr.me"] " (sounds)"]
-      [:p [:a {:href "https://github.com/chr15m/speccy/#quick-start"} "documentation"]]]]))
+      [:p [:a {:href "https://github.com/chr15m/speccy/#quick-start"} "documentation"]]]
+     [:button#send-it {:class "send-it" :on-click (fn [ev] (send-it @cm-instance))} "↺"]]))
 
 ;; -------------------------
 ;; Initialize app
