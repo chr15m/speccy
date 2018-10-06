@@ -48,6 +48,15 @@ for example:
 
 will yield: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...`. 
 
+ * `rnd` is a random number generator.
+   * Called with no arguments it returns a float between 0 and 1. e.g. `(rnd)`
+   * Called with an integer argument it returns an integer between zero and the argument. e.g. `(rnd 5)`
+   * Called with a vector it returns a single randomly selected element from the vector. e.g. `(rnd [1 1 2 3 5 8])`
+
+ * `seed` seeds the random number generator to make it deterministic.
+
+ * `zz` wraps a function such that the function is only called if none of the arguments to it are nil. e.g. `((zz +) 1 nil 2)` will yeild nil.
+
 # Instrument parameters
 
 	:wave - oscillator waveform (:square :saw :sine :noise)
