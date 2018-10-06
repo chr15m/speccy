@@ -57,6 +57,10 @@ will yield: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...
 
  * `zz` wraps a function such that the function is only called if none of the arguments to it are nil. e.g. `((zz +) 1 nil 2)` will yeild nil.
 
+# Set global BPM
+
+	(swap! player assoc :bpm 125)
+
 # Instrument parameters
 
 	:wave - oscillator waveform (:square :saw :sine :noise)
