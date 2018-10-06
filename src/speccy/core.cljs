@@ -39,6 +39,8 @@
 
 (defonce editor-content (atom ""))
 (defonce cm-instance (atom nil))
+(defonce q js/document.location.search)
+(defonce document-namespace (str "speccy-editor" (if (= q "") "" (str "-" q))))
 
 (def is-mac?
   (>= (.indexOf (aget js/navigator "userAgent") "Macintosh") 0))
@@ -88,7 +90,7 @@
 (defn send-it [cm]
   (let [content (.getValue cm)]
     (reset! editor-content content)
-    (.setItem js/localStorage "speccy-editor" content)
+    (.setItem js/localStorage document-namespace content)
     (try
       (eval-str content)
       (catch :default e (js/alert e)))))
@@ -133,5 +135,5 @@
 
 (defn init! []
   (print "init")
-  (reset! editor-content (or (.getItem js/localStorage "speccy-editor") ""))
+  (reset! editor-content (or (.getItem js/localStorage document-namespace) ""))
   (mount-root))
