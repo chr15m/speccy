@@ -115,9 +115,11 @@
     (js->clj ((aget js/sfxr "b58decode") s) :keywordize-keys true)
     {}))
 
+(def from-b58-mem (memoize from-b58))
+
 (defn default-from-b58 [instrument-result]
   (let [d (instrument-result :default)]
-    (from-b58 d)))
+    (from-b58-mem d)))
 
 ;; -------------------------
 ;; Audio engine
@@ -234,10 +236,9 @@
 (def generate-sound-mem (memoize generate-sound))
 
 (defn process-single-instrument [i t]
-  ;(print "process-single-instrument" i)
   (cond
     (fn? i) (i t)
-    (string? i) (from-b58 i)
+    (string? i) (from-b58-mem i)
     (map? i) i
     ; TODO: feedback for the user here
     :else {}))
@@ -249,6 +250,7 @@
 (defn evaluate-instrument [actx t instrument-definition]
   ;(print "instrument-definition" instrument-definition)
   (let [instrument-results (map #(process-single-instrument % t) instrument-definition)
+        ; TODO: memoize here?
         ;_ (print "instrument-results:" instrument-results)
         result (apply merge instrument-results)
         result (when result (merge instrument-defaults

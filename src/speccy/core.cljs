@@ -12,7 +12,6 @@
 
 ; TODO:
 ;
-; * button to run send-it instead of ctrl/cmd-S
 ; * key combo to insert 0x00
 ; * note shortcuts like :C#4 and :A-2 (need octaves in there)
 ; * better error handling - figwheel like popup
