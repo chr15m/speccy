@@ -15,6 +15,11 @@
   top: 50%;
   margin-top: -32px;
   margin-left: -32px;
+  animation: 0.5s linear 0s normal none infinite running spinner;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
 }
 
 * {
