@@ -1,5 +1,6 @@
 (ns speccy.engine
   (:require [cljs.core.async :refer [chan <! close!]]
+            [speccy.webaudio :as audio]
             sfxr
             riffwave
             seedrandom)
@@ -128,7 +129,8 @@
   (atom {:instruments []
          :bpm bpm
          :sub-ticks 2
-         :playing true}))
+         :playing true
+         :actx (audio/get-context)}))
 
 (defn bpm-to-period [bpm]
   (/ 60 bpm))
@@ -224,7 +226,6 @@
         proc (.createBufferSource actx)]
     (.set buffer-writer wave-buffer)
     (aset proc "buffer" buffer)
-    (.connect proc (.-destination actx))
     proc))
 
 (defn generate-sound [definition]
@@ -263,7 +264,8 @@
         result
         ;(printstrument)
         (generate-sound-mem)
-        (make-source actx)))))
+        (make-source actx)
+        (audio/connect actx (result :bus))))))
 
 (defn time-and-evaluate-instrument [])
 
@@ -278,7 +280,7 @@
 
 (defn play [player]
   (go
-    (let [actx (when (aget js/window "AudioContext") (js/window.AudioContext.))]
+    (let [actx (@player :actx)]
       (print "play")
       (loop [tick 0 last-tick-time 0]
         ;(<! (timeout-worker (* 1000 (bpm-timeout @player))))
