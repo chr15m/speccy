@@ -1,4 +1,4 @@
-eight-bit algorave livecoding
+eight-bit algorave clojurescript livecoding
 
 ![zx-spectrum close-up](./public/img/speccy.png)
 
@@ -8,18 +8,22 @@ eight-bit algorave livecoding
 
 Minimal example to paste into the editor:
 
-`(sfxr {:wave :square :note #(at % 16 {0 60 8 65})})`
+```clojure
+(sfxr {:wave :square :note #(at % 16 {0 60 8 65})})
+```
 
 More complex example:
 
-	(sfxr "1111128F2i1nMgXwxZ1HMniZX45ZzoZaM9WBtcQMiZDBbD7rvq6mBCATySSmW7xJabfyy9xfh2aeeB1JPr4b7vKfXcZDbWJ7aMPbg45gBKUxMijaTNnvb2pw"
-	      {:duty #(/ (mod % 256) 256)
-	       :note #(at % 16 {0 24
-	                        3 24
-	                        4 60
-	                        5 48
-	                        6 24
-	                        8 24})})
+```clojure
+(sfxr "1111128F2i1nMgXwxZ1HMniZX45ZzoZaM9WBtcQMiZDBbD7rvq6mBCATySSmW7xJabfyy9xfh2aeeB1JPr4b7vKfXcZDbWJ7aMPbg45gBKUxMijaTNnvb2pw"
+      {:duty #(/ (mod % 256) 256)
+       :note #(at % 16 {0 24
+			3 24
+			4 60
+			5 48
+			6 24
+			8 24})})
+```
 
 To make your own synths:
 
@@ -35,7 +39,9 @@ To make your own synths:
 
 For example:
 
-	#(sq % [1 1 0 0])
+```clojure
+#(sq % [1 1 0 0])
+```
 
 Will yield: `1 1 0 0 1 1 0 0 1 1 0 0 ...`.
 
@@ -43,8 +49,10 @@ Will yield: `1 1 0 0 1 1 0 0 1 1 0 0 ...`.
 
 for example:
 
-	#(at % 8 {2 60
-	          7 55})
+```clojure
+#(at % 8 {2 60
+	  7 55})
+```
 
 will yield: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...`. 
 
@@ -59,7 +67,9 @@ will yield: `nil nil 60 nil nil nil nil 55 nil nil 60 nil nil nil nil 55 nil ...
 
 # Set global BPM
 
-	(swap! player assoc :bpm 125)
+```clojure
+(swap! player assoc :bpm 125)
+```
 
 # Instrument parameters
 
